@@ -1,13 +1,20 @@
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 
+// In-memory DB
 let notes = [];
 let id = 1;
 
-const cors = require("cors");
-app.use(cors());
+// ✅ Root route (fix "Cannot GET /")
+app.get("/", (req, res) => {
+  res.send("Notes API is running 🚀");
+});
 
 // POST - create note
 app.post("/notes", (req, res) => {
@@ -24,7 +31,7 @@ app.post("/notes", (req, res) => {
   };
 
   notes.push(newNote);
-  res.status(201).json(newNote); // better status
+  res.status(201).json(newNote);
 });
 
 // GET - all notes
@@ -64,7 +71,9 @@ app.delete("/notes/:id", (req, res) => {
   res.json({ message: "Note deleted successfully" });
 });
 
-// start server
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+// ✅ Use dynamic port for deployment
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

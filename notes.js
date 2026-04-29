@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/notes";
+const API = "https://notesapp-3zvh.onrender.com/notes";
 
 // Fetch notes
 async function getNotes() {

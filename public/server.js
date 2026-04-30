@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -7,14 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// In-memory DB
+// Serve frontend
+app.use(express.static(path.join(__dirname, "public")));
+
+// In-memory DB (temporary)
 let notes = [];
 let id = 1;
 
-// ✅ Root route (fix "Cannot GET /")
-app.get("/", (req, res) => {
-  res.send("Notes API is running 🚀");
-});
+// ================= ROUTES ================= //
 
 // POST - create note
 app.post("/notes", (req, res) => {
@@ -50,8 +51,8 @@ app.put("/notes/:id", (req, res) => {
     return res.status(404).json({ message: "Note not found" });
   }
 
-  note.title = title || note.title;
-  note.content = content || note.content;
+  if (title !== undefined) note.title = title;
+  if (content !== undefined) note.content = content;
 
   res.json(note);
 });
@@ -71,9 +72,21 @@ app.delete("/notes/:id", (req, res) => {
   res.json({ message: "Note deleted successfully" });
 });
 
-// ✅ Use dynamic port for deployment
+// ================= ERROR HANDLING ================= //
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong" });
+});
+
+// ================= SERVER ================= //
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

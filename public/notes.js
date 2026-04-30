@@ -13,11 +13,11 @@ async function getNotes() {
       const li = document.createElement("li");
 
       li.innerHTML = `
-        <strong>${note.title}</strong> - ${note.content}
-        <br/>
-        <button onclick="editNote(${note.id}, '${note.title}', '${note.content}')">Edit</button>
-        <button onclick="deleteNote(${note.id})">Delete</button>
-      `;
+  <strong>${note.title}</strong> - ${note.content}
+  <br/>
+  <button onclick="editNote(${note.id})">Edit</button>
+  <button onclick="deleteNote(${note.id})">Delete</button>
+`;
 
       list.appendChild(li);
     });
